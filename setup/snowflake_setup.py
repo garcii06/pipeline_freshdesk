@@ -55,7 +55,7 @@ def create_infrastructure(con):
 def create_raw_table_if_not_exist(cur, table_name):
     cur.execute(
         f"CREATE TABLE IF NOT EXISTS freshdesk_raw.raw.{table_name}(" 
-        "_raw       VARIANT,"
+        "_raw       VARCHAR,"
         "_loaded_at TIMESTAMP,"
         "_source    VARCHAR,"
         "_batch_id  VARCHAR"
