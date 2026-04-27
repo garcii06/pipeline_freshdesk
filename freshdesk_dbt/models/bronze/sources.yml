@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: raw
+    database: freshdesk_raw
+    schema: raw
+    tables:
+      - name: tickets
+      - name: companies
+      - name: contacts
