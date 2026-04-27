@@ -45,12 +45,22 @@ class SnowflakeLoader:
     def insert_records(self, table_name, records, source):
         batch_id = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
         cur = self.con.cursor()
-        for record in records:
-            cur.execute(
+        
+        tuples = [
+            (json.dumps(record), datetime.now(timezone.utc), source, batch_id)
+            for record in records
+        ]
+        
+        # insert in chunks of 1000
+        chunk_size = 1000
+        for i in range(0, len(tuples), chunk_size):
+            chunk = tuples[i:i + chunk_size]
+            cur.executemany(
                 f"INSERT INTO freshdesk_raw.raw.{table_name} "
-                f"SELECT PARSE_JSON(%s), %s, %s, %s",
-                (json.dumps(record), datetime.now(timezone.utc), source, batch_id)
+                f"VALUES (%s, %s, %s, %s)",
+                chunk
             )
-    
+            logger.info(f"Inserted chunk {i//chunk_size + 1} of {len(tuples)//chunk_size + 1}")
+
     def close(self):
         self.con.close()
