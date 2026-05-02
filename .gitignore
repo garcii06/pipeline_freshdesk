@@ -5,3 +5,4 @@ logs/
 *.db
 data/
 __pycache__/
+plugins/
