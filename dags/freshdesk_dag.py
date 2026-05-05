@@ -3,6 +3,8 @@ sys.path.insert(0, '/opt/airflow/pipeline')
 
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.providers.standard.operators.bash import BashOperator 
+
 from utils.logger import get_logger
 from datetime import datetime, timedelta
 
@@ -103,5 +105,10 @@ with DAG(
         task_id='extract_load_contacts',
         python_callable=extract_load_contacts
     )
+ 
+    dbt_task = BashOperator(
+        task_id='dbt_run',
+        bash_command='cd /opt/airflow/pipeline/freshdesk_dbt && dbt run'
+    )
 
-    [tickets_task, companies_task, contacts_task]
+    [tickets_task, companies_task, contacts_task] >> dbt_task
