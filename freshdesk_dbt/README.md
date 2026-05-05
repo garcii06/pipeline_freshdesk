@@ -1,12 +1,38 @@
-# 🥪 The Jaffle Shop 🦘
+# freshdesk_dbt
 
-_powered by the dbt Fusion engine_
+dbt project for transforming FreshDesk data loaded into Snowflake.
 
-Welcome! This is a sandbox project for exploring the basic functionality of Fusion. It's based on a fictional restaurant called the Jaffle Shop that serves [jaffles](https://en.wikipedia.org/wiki/Pie_iron).
+## Stack
+- dbt Core + dbt-snowflake
+- Snowflake (freshdesk_raw database)
 
-To get started:
-1. Set up your database connection in `~/.dbt/profiles.yml`. If you got here by running `dbt init`, you should already be good to go.
-2. Run `dbt build`. That's it!
+## Structure
+models/
+├── bronze/    # Raw JSON extraction from source tables
+├── silver/    # Cleaned, decoded, business logic
+└── gold/      # Aggregated metrics for consumption
 
-> [!NOTE]
-> If you're brand-new to dbt, we recommend starting with the [dbt Learn](https://learn.getdbt.com/) platform. It's a free, interactive way to learn dbt, and it's a great way to get started if you're new to the tool.
+## Medallion Layers
+
+**Bronze** — extracts fields from raw JSON, deduplicates by id
+**Silver** — decodes status/priority codes, extracts custom fields, drops irrelevant columns  
+**Gold** — aggregated metrics served to Power BI
+
+## Sources
+
+Raw data lives in `freshdesk_raw.raw`:
+- `tickets` — support tickets
+- `companies` — customer companies
+- `contacts` — customer contacts
+
+## Setup
+
+Add connection to `~/.dbt/profiles.yml` — see `.env.example` for required Snowflake credentials.
+
+## Commands
+
+```bash
+dbt run          # run all models
+dbt test         # run all tests
+dbt run --select bronze  # run specific layer
+```
