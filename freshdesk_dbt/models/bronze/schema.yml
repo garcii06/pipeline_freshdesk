@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_tickets
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+
+  - name: stg_companies
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_contacts
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null

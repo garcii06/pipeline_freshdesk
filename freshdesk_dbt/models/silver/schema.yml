@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: int_tickets
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+      - name: status_label
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Open', 'Pending', 'Resolved', 'Closed']
